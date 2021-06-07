@@ -1,0 +1,60 @@
+# Pleiades
+pleiades:
+  control:
+    command-topic: command
+    follow-topic: follow
+  agent:
+    agent-id: gh-extract
+    route-log-topic: logs-route
+    route-log-with-inspection-topic: logs-route-with-inspection
+    route-properties-directory: routes
+    elasticsearch-route-log-index: logs-route
+  jaeger:
+    service: GMD
+    host: http://34.64.234.45
+    port: 14268
+    kafka-bootstrap-servers: 34.64.70.138:9093
+    kafka-tracing-topic: trace-1
+
+# Spring Boot
+server:
+  port: 8070
+  servlet:
+    context-path: /pleiades/api
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/portal
+    username: vtw
+    password: vtw123#
+  jpa:
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: create-drop
+
+# Apache Camel
+camel:
+  springboot:
+    main-run-controller: true
+    stream-caching-enabled: false
+    jmx-enabled: false
+  component:
+    kafka:
+      allow-manual-commit: false
+      auto-commit-enable: true
+      brokers: ${pleiades.jaeger.kafka-bootstrap-servers}
+      group-id: test-001-${USERDOMAIN_ROAMINGPROFILE}
+      break-on-first-error: true
+    elasticsearch-rest:
+      host-addresses: 34.64.234.45:9200
+# Logging
+logging:
+  level:
+    root: info
+    org.hibernate.type: info
+    com.vtw: debug
+    org.apache.kafka.clients.consumer.ConsumerConfig: warn
+    com.vtw.pleiades.agent.logging.opentracing.JaegerHttpSender: warn
+    io.jaegertracing.internal.reporters.LoggingReporter: warn
+    org.apache.kafka.clients: warn

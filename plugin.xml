@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            id="com.vtw.xplatform.commands.mainCategory"
+            name="Main Category">
+      </category>
+      <category
+            id="com.vtw.xplatform.sampleNature.category"
+            name="Sample Project Nature commands">
+      </category>
+      <command
+            categoryId="com.vtw.xplatform.sampleNature.category"
+            defaultHandler="com.vtw.xplatform.builder.AddRemoveSampleNatureHandler"
+            id="com.vtw.xplatform.addRemoveSampleNature"
+            name="Add/RemoveSample Project Nature">
+      </command>
+      <command
+            categoryId="com.vtw.xplatform.commands.mainCategory"
+            defaultHandler="com.vtw.xplatform.handlers.NewAgentProjectHandler"
+            id="com.vtw.xplatform.commands.newAgentProject"
+            name="에이전트 프로젝트 생성...">
+      </command>
+      <command
+            categoryId="com.vtw.xplatform.commands.mainCategory"
+            defaultHandler="com.vtw.xplatform.handlers.ImportRouteHandler"
+            id="com.vtw.xplatform.commands.importRoute"
+            name="라우트 설정 가져오기...">
+      </command>
+      <command
+            categoryId="com.vtw.xplatform.commands.mainCategory"
+            defaultHandler="com.vtw.xplatform.handlers.NewProcessHandler"
+            id="com.vtw.xplatform.commands.newProcess"
+            name="프로세스 생성...">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               id="com.vtw.xplatform.menus.mainMenu"
+               label="X플랫폼"
+               mnemonic="M">
+            <command
+                  commandId="com.vtw.xplatform.commands.newAgentProject"
+                  icon="icons/newjprj_wiz.png"
+                  id="com.vtw.xplatform.menus.newAgentProject"
+                  label="에이전트 프로젝트 생성..."
+                  mnemonic="S">
+            </command>
+            <command
+                  commandId="com.vtw.xplatform.commands.importRoute"
+                  icon="icons/import_wiz.png"
+                  id="com.vtw.xplatform.menus.importRoute"
+                  label="라우트 설정 가져오기..."
+                  mnemonic="S">
+            </command>
+            <command
+                  commandId="com.vtw.xplatform.commands.newProcess"
+                  icon="icons/newclass_wiz.png"
+                  id="com.vtw.xplatform.menus.newProcess"
+                  label="프로세스 생성..."
+                  mnemonic="S">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+         <command
+               commandId="com.vtw.xplatform.addRemoveSampleNature"
+               label="Disable Sample builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <test
+                              property="org.eclipse.core.resources.projectNature"
+                              value="com.vtw.xplatform.sampleNature">
+                        </test>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+         <command
+               commandId="com.vtw.xplatform.addRemoveSampleNature"
+               label="Enable Sample builder"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <count
+                        value="1">
+                  </count>
+                  <iterate>
+                     <adapt
+                           type="org.eclipse.core.resources.IProject">
+                        <not>
+                           <test
+                                 property="org.eclipse.core.resources.projectNature"
+                                 value="com.vtw.xplatform.sampleNature">
+                           </test>
+                        </not>
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+            id="com.vtw.xplatform"
+            name="X플랫폼">
+      </category>
+      <wizard
+            category="com.vtw.xplatform"
+            class="com.vtw.xplatform.wizards.NewAgentProjectWizard"
+            icon="icons/newjprj_wiz.png"
+            id="com.vtw.xplatform.wizards.NewAgentProjectWizard"
+            name="에이전트 프로젝트">
+      </wizard>
+      <wizard
+            category="com.vtw.xplatform"
+            class="com.vtw.xplatform.wizards.NewProcessWizard"
+            icon="icons/newclass_wiz.png"
+            id="com.vtw.xplatform.wizards.NewProcessWizard"
+            name="프로세스">
+      </wizard>
+   </extension>
+   <extension
+         id="sampleBuilder"
+         name="Sample Project Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="com.vtw.xplatform.builder.SampleBuilder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="sampleNature"
+         name="Sample Project Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.vtw.xplatform.builder.SampleNature">
+         </run>
+      </runtime>
+      <builder
+            id="com.vtw.xplatform.sampleBuilder">
+      </builder>
+   </extension>
+   <extension
+         id="xmlProblem"
+         name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         id="id1"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="com.vtw.xplatform.ProjectNature2">
+         </run>
+      </runtime>
+   </extension>
+   <extension
+         point="org.eclipse.ui.ide.projectNatureImages">
+      <image
+            icon="icons/volatile_co.png"
+            id="com.vtw.xplatform.sampleNature.image"
+            natureId="com.vtw.xplatform.sampleNature">
+      </image>
+   </extension>
+
+</plugin>
