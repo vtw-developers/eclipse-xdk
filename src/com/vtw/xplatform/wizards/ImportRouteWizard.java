@@ -41,8 +41,6 @@ public class ImportRouteWizard extends Wizard implements INewWizard {
 		String projectName = page.getProjectName();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		final IProject project = workspace.getRoot().getProject(projectName);
-		System.out.println(workspace.getRoot().getFullPath().toString());
-		System.out.println(IDEWorkbenchPlugin.getPluginWorkspace().getRoot().getFullPath().toString());
 		IPath wsPath = workspace.getRoot().getLocation();
 
 		String fileName = originalPath.substring(originalPath.lastIndexOf(File.separator) + 1);

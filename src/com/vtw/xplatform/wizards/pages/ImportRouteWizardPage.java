@@ -6,6 +6,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectNature;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -17,10 +22,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Combo;
 
 public class ImportRouteWizardPage extends WizardPage {
 
-	private Text projectNameText;
+	private Combo projectNameCombo;
 	private Text locationText;
 
 	public ImportRouteWizardPage() {
@@ -44,8 +50,23 @@ public class ImportRouteWizardPage extends WizardPage {
 		Label projectNameLabel = new Label(composite, SWT.NONE);
 		projectNameLabel.setText("프로젝트명");
 		
-		projectNameText = new Text(composite, SWT.BORDER);
-		projectNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		projectNameCombo = new Combo(composite, SWT.BORDER);
+		projectNameCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IProject[] projects = workspace.getRoot().getProjects();
+		for (IProject project : projects) {
+			if (project.isOpen()) {
+				try {
+					IProjectNature nature = project.getNature("com.vtw.xplatform.sampleNature");
+					if (nature != null) {
+						projectNameCombo.add(project.getName());
+					}
+				} catch (CoreException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		projectNameCombo.select(0);
 		
 		
 		Label locationLabel = new Label(composite, SWT.NONE);
@@ -69,7 +90,7 @@ public class ImportRouteWizardPage extends WizardPage {
 	}
 
 	public String getProjectName() {
-		return projectNameText.getText();
+		return projectNameCombo.getText();
 	}
 	
 	public String getLocation() {
